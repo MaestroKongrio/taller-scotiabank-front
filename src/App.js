@@ -24,13 +24,13 @@ function App() {
           <Col>
           <Navbar bg="light" expand="lg">
           <Container>
-            <Navbar.Brand href="#home">Taller Scotiabank</Navbar.Brand>
+            <Navbar.Brand href="#home">Taller Copec</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link href="/redes">Conectar a Redes</Nav.Link>
-                <Nav.Link href="/tokens">Tokens</Nav.Link>
-                <Nav.Link href="/poap">Claim POAP</Nav.Link>
+           {/*     <Nav.Link href="/tokens">Tokens</Nav.Link>
+  <Nav.Link href="/poap">Claim POAP</Nav.Link> */}
               </Nav>
             </Navbar.Collapse>
           </Container>

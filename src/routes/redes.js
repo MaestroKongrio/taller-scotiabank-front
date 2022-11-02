@@ -52,8 +52,7 @@ function Redes() {
             <Row>
                 <Col>
                     <h3>Conectar a las Redes</h3>
-                    <div>Esta sección permite agregar la Fuji Testnet o la Red Kaleido
-                    del demo a Metamask sin necesidad de configuraciones adicionales</div>
+                    <div>Esta sección permite agregar la Fuji Testnet sin necesidad de configuraciones adicionales</div>
                 </Col>
             </Row> 
 
@@ -61,17 +60,7 @@ function Redes() {
                 <Col>
                     <Button variant="primary" onClick={connect}>Agregar la Fuji Testnet</Button>
                 </Col>
-            </Row> 
-            <Row className="mt-4">
-                <Col>
-                    <Button variant="primary" onClick={connectKaleido}>Agregar la Red Kaleido</Button>
-                </Col>
-            </Row>      
-            <Row className="mt-4">
-                <Col>
-                    <Button variant="primary" onClick={authorize}>Autorizar al sitio</Button>
-                </Col>
-            </Row>  
+            </Row>    
             <Row className="mt-4">
                 <Col>
                     <Button variant="success" onClick={()=>window.open("http://faucet.avax.network","_blank","noopener,noreferrer")}>Ir a pedir fondos al Faucet</Button>
