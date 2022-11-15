@@ -55,7 +55,11 @@ function Redes() {
                     <div>Esta sección permite agregar la Fuji Testnet sin necesidad de configuraciones adicionales</div>
                 </Col>
             </Row> 
-
+            <Row className="mt-4">
+                <Col>
+                    <Button variant="primary" onClick={authorize}>Autorizar Sitio</Button>
+                </Col>
+            </Row> 
             <Row className="mt-4">
                 <Col>
                     <Button variant="primary" onClick={connect}>Agregar la Fuji Testnet</Button>
