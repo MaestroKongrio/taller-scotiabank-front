@@ -7,6 +7,7 @@ function Tokens() {
     const [balance,setBalance] = useState(0);
     const [balanceCCP,setBalanceCCP] = useState(0);
     const [tipoCambio,setTipoCambio] = useState(0);
+    const [mensaje,setMensaje] = useState(0);
 
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const signer = provider.getSigner()
@@ -16,7 +17,7 @@ function Tokens() {
         console.log(account)
         const currentBalance= await tokenContract.balanceOf(account[0])
         console.log(currentBalance)
-        setBalance(ethers.utils.formatUnits(currentBalance,18))
+        setBalance(ethers.utils.formatUnits(currentBalance,0))
     }
 
     const refreshBalanceCCP = async() => {
@@ -24,10 +25,88 @@ function Tokens() {
         console.log(account)
         const currentBalance= await tokenCCPContract.balanceOf(account[0])
         console.log(currentBalance)
-        setBalanceCCP(ethers.utils.formatUnits(currentBalance,18))
+        setBalanceCCP(ethers.utils.formatUnits(currentBalance,0))
     }
 
-    const tokenAddress= "0x29d54E995b3f5b4E20A46F1a1F1ec7b53DCCf88D";
+    const signerAddress="0x3a2359cf4A10032220829126B0E297e40577f5bb"
+    const signerABI= [
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "monto",
+                    "type": "uint256"
+                }
+            ],
+            "name": "extraerHash",
+            "outputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "monto",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes",
+                    "name": "sig",
+                    "type": "bytes"
+                }
+            ],
+            "name": "obtenerAddress",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes",
+                    "name": "sig",
+                    "type": "bytes"
+                }
+            ],
+            "name": "splitSignature",
+            "outputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+        }
+    ]
+    const signerContract = new ethers.Contract(signerAddress,signerABI);
+
+
+    const tokenAddress= "0x51a3839b6D58C022A4aF93adDAe0e4e9Fdc94852";
     const abi = [
         {
             "inputs": [],
@@ -452,7 +531,7 @@ function Tokens() {
     ]
     const tokenContract = new ethers.Contract(tokenAddress,abi,provider)
 
-    const tokenCCPAddress= "0xD8B1E07561A4ff84667b42f2Be1d3f851f0b5146"
+    const tokenCCPAddress= "0xa83527C2696600aC60B74fba96df6A4A06d31398"
     const tokenCCPContract= new ethers.Contract(tokenCCPAddress,abi,provider)
 
 
@@ -465,7 +544,7 @@ function Tokens() {
                 options: {
                     address: tokenAddress,
                     symbol: "sCLP",
-                    decimals: 18
+                    decimals: 0
                 }
             }
         })
@@ -479,14 +558,14 @@ function Tokens() {
                 options: {
                     address: tokenCCPAddress,
                     symbol: "sCCP",
-                    decimals: 18
+                    decimals: 0
                 }
             }
         })
     }
 
-    const faucetAddress = "0x3c479176Edb01F09954DF1d50464F1401EC48F35"
-    const faucetCCPAddress= "0xa9c5248F27C3C9AbA8B26a9446b1b184274A6e38"
+    const faucetAddress = "0x6AD0C2820b507E854Da98881947084F5279AB34E"
+    const faucetCCPAddress= "0xB465DEBF8354e032168B44B97bF29922bbe4DB94"
 
     const faucetAbi = [
         {
@@ -553,7 +632,7 @@ function Tokens() {
     const requestTokens = async() => {
         const faucetWithSigner = faucetContract.connect(signer)
         try {
-            const tx= await faucetWithSigner.request(ethers.utils.parseUnits("1000", 18))
+            const tx= await faucetWithSigner.request(ethers.utils.parseUnits("1000", 0))
             console.log(tx)
             await refreshBalance()    
         }
@@ -565,7 +644,7 @@ function Tokens() {
     const requestCCPTokens = async() => {
         const faucetWithSigner = faucetCCPContract.connect(signer)
         try {
-            const tx= await faucetWithSigner.request(ethers.utils.parseUnits("1000", 18))
+            const tx= await faucetWithSigner.request(ethers.utils.parseUnits("1000", 0))
             console.log(tx)
             await refreshBalance()
         }
@@ -575,7 +654,7 @@ function Tokens() {
 
     }
 
-    const exchangeAddress="0xFD1d0fbDe337b3cb4dBe9980cDB9dA1122552AA9"
+    const exchangeAddress="0x502f9A746d959fa0ACD7B6D1a796f44dD982a8fC"
     const exchangeAbi= [
         {
             "inputs": [
@@ -739,13 +818,22 @@ function Tokens() {
 
     const aproveDescuento= async() => {
         const sCLPWithSigner = tokenContract.connect(signer)
-        await sCLPWithSigner.approve(exchangeAddress,ethers.utils.parseUnits("1000", 18))      
+        await sCLPWithSigner.approve(exchangeAddress,ethers.utils.parseUnits("1000", 0))      
         alert("Autorizacion Lista")
     }
 
     const ejecutarCambio= async() => {
         const exchangeWithSigner = exchangeContract.connect(signer)
-        await exchangeWithSigner.swap(ethers.utils.parseUnits("1000", 18))      
+        await exchangeWithSigner.swap(ethers.utils.parseUnits("1000", 0))      
+    }
+
+    const changeMensajeHandler = async(e)=>{
+        setMensaje(e.target.value)
+    }
+
+    const firmarMensaje = async()=>{
+        const hash= await signer.signMessage(ethers.utils.hashMessage(mensaje))
+        console.log(hash)
     }
 
     return(
@@ -754,9 +842,9 @@ function Tokens() {
                 <Col md={4}>
                     <Card>
                         <Card.Body>
-                        <Card.Title>Token ERC20 ScotiaCLP</Card.Title>
+                        <Card.Title>Token ERC20 CLP</Card.Title>
                         <Card.Text>
-                        <div>Token de Prueba, e-Peso Chileño</div>
+                        <div>Token de Prueba, e-Peso Chileno</div>
                         <div className="mt-2"><strong>Mi saldo: {balance}</strong>  <Button variant="primary" size="sm" onClick={refreshBalance}>Refrescar</Button></div>
                         <div className="mt-2"><Button variant="primary" size="sm" onClick={requestTokens}>Pedir 1.000 Tokens al Faucet</Button></div>
                         <div className="mt-2"><Button variant="primary" size="sm" onClick={addToken}>Agregar el Token a Metamask</Button></div> 
@@ -767,9 +855,9 @@ function Tokens() {
                 <Col md={4}>
                 <Card>
                 <Card.Body>
-                <Card.Title>Token ERC20 ScotiaCCP</Card.Title>
+                <Card.Title>Token ERC20 CCP</Card.Title>
                 <Card.Text>
-                <div>Token de Prueba, e-Peso Caribeño</div>
+                <div>Token de Prueba, e-Peso Copec</div>
                 <div className="mt-2"><strong>Mi saldo: {balanceCCP}</strong>  <Button variant="primary" size="sm" onClick={refreshBalanceCCP}>Refrescar</Button></div>
                 <div className="mt-2"><Button variant="primary" size="sm" onClick={requestCCPTokens}>Pedir 1.000 Tokens al Faucet</Button></div>
                 <div className="mt-2"><Button variant="primary" size="sm" onClick={addTokenCCP}>Agregar el Token a Metamask</Button></div> 
@@ -788,6 +876,18 @@ function Tokens() {
                                 <div><strong>Tipo de Cambio: {tipoCambio}</strong> <Button variant="primary" size="sm" onClick={getTipoCambio}>Actualizar</Button></div>
                                 <div className="mt-2"><Button variant="primary" size="sm" onClick={aproveDescuento}>Autorizar el Descuento de 1.000 sCLP</Button></div>
                                 <div className="mt-2"><Button variant="primary" size="sm" onClick={ejecutarCambio}>Ejecutar el cambio</Button></div>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+            <Row className="mt-4">
+                <Col md={8}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Firmar Mensaje</Card.Title>
+                            <Card.Text>
+                                <div>Monto: <input type="text" onChange={changeMensajeHandler}/> <Button variant="primary" onClick={firmarMensaje}>Generar Firma</Button></div>
                             </Card.Text>
                         </Card.Body>
                     </Card>
